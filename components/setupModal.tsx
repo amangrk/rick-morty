@@ -6,7 +6,6 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalCloseButton,
   ModalBody,
   ModalFooter,
   FormControl,
@@ -42,11 +41,18 @@ export default function SetupModal() {
       motionPreset="slideInBottom"
     >
     <ModalOverlay bg="blackAlpha.600" />
-    <ModalContent maxW="400px" borderRadius="lg" p={6}>
+    <ModalContent 
+      maxW="400px" 
+      borderRadius="lg" 
+      p={6}
+      as="form"
+      onSubmit={e => {
+        e.preventDefault()
+        handleSave()
+    }}>
       <ModalHeader pb={2} textAlign="center">
         <Heading size="md">Welcome!</Heading>
       </ModalHeader>
-      <ModalCloseButton />
       <ModalBody>
         <VStack spacing={4} align="stretch">
           <Text textAlign="center">
@@ -79,6 +85,7 @@ export default function SetupModal() {
       </ModalBody>
       <ModalFooter pt={4} justifyContent="center">
         <Button
+          type='submit'
           colorScheme="teal"
           onClick={handleSave}
           isDisabled={!username || !jobTitle}

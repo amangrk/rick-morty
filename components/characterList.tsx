@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import dynamic from 'next/dynamic'
 import { 
     Grid, 
     GridItem, 
@@ -8,17 +9,22 @@ import {
     Button, 
     Text 
 } from '@chakra-ui/react'
-import CharacterCard from './characterCard'
 import Link from 'next/link'
 import type { Character } from '@/app/types'
+import Loading from '@/app/loading'
 
-interface HomeContentProps {
+interface CharacterListProps {
   characters?: Character[]
   totalPages?: number
   currentPage?: number
 }
 
-export default function CharacterList({characters=[], totalPages=1, currentPage=1 }: HomeContentProps) {
+const CharacterCard = dynamic(() => import('./characterCard'), { 
+    loading: () => <Loading />, 
+    ssr: false  // only load on the client
+  })
+  
+export default function CharacterList({characters=[], totalPages=1, currentPage=1 }: CharacterListProps) {
   //  pagination display: first, ..., surrounding, ..., last
   const delta = 2
   const pages: (number | string)[] = []

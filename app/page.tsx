@@ -33,8 +33,7 @@ export default async function Page({ searchParams }: { searchParams?: Promise<{ 
        {/* Header */}
       <Box
         as="header"
-        bgSize="cover"
-        bgPosition="center"
+        bgColor="black"
         h={{ base: '100px', md: '150px' }}
         mb={8}
       >

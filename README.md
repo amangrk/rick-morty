@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rick & Morty Gallery
+
+A **Next.js 13+ App Router** project showcasing Rick & Morty characters with a polished, performant UI.
+
+---
+
+## Table of Contents
+
+1. [Getting Started](#getting-started)
+2. [Scripts](#scripts)
+3. [Architecture & Decision Points](#architecture--decision-points)
+4. [Folder Structure](#folder-structure)
+5. [Performance Tuning](#performance-tuning)
+6. [Future Improvements](#future-improvements)
+
+---
 
 ## Getting Started
 
-First, run the development server:
+**Prerequisites**: Node.js ≥16, npm or Yarn
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. Clone the repo:
+   ```bash
+   git clone <repo-url>
+   cd rick-morty-gallery
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   # or `yarn`
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+4. Open your browser to [http://localhost:3000](http://localhost:3000).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `npm run dev` – Start Next.js in development mode (Fast Refresh).
+- `npm run build` – Build for production (SSR + ISR).
+- `npm start` – Start the production server.
+- `npm run lint` – Run ESLint.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Architecture & Decision Points
 
-## Learn More
+### 1. Next.js App Router & SSR/ISR
 
-To learn more about Next.js, take a look at the following resources:
+- **App Router** for file-based routing and React Server Components.
+- Root layout (`app/layout.tsx`) wraps children in a **client-only** provider (`ClientProviders`) to avoid hydration mismatches.
+- Data fetching done via Apollo Client in **server components**, with:
+  ```ts
+  export const revalidate = 60
+  ```
+  enabling ISR (rebuild every 60s).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. User Gating Modal
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Client-only `SetupModalClient` prompts for **username** & **job title** stored in cookies.
 
-## Deploy on Vercel
+### 3. GraphQL & Apollo
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Server: `lib/apolloClient.ts` uses `registerApolloClient`.
+- Client: `lib/apolloWrapper.tsx` wraps app in `ApolloNextAppProvider`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 4. Pagination & Deep Linking
+
+- URL‐based page query `?page=` supports direct linking.
+- Compact controls show **first**, **last**, and **current ±2** pages with ellipses.
+
+### 5. Responsive UI & Accessibility
+
+- **Chakra UI** for theming, layout, and components.
+- Responsive grid: 1 column (mobile), 2 columns (sm), 3 columns (md+).
+- Semantic HTML (`<header>`, `<main>`, `<footer>`).
+
+
+---
+
+## Folder Structure
+
+```text
+├── app
+│   ├── layout.tsx         # Root layout + ClientProviders
+│   ├── loading.tsx        # Global loading spinner
+│   ├── error.tsx          # Global error boundary
+│   ├── page.tsx           # Home page (SSR + ISR)
+│   └── types.d.ts         # GraphQL types
+├── components
+│   ├── characterList.tsx    # Client: grid + pagination + modal control
+│   ├── characterCard.tsx    # Client: card + detail modal
+│   ├── setupModal.tsx       # Client: user info input modal
+│   └── userInfo.tsx         # Client: avatar edit trigger
+├── lib
+│   ├── fetch.ts           # Server fetch wrapper for Apollo
+│   ├── makeApolloClient.ts# Shared Apollo factory
+│   ├── apolloClient.ts    # Server Apollo integration
+│   └── apolloWrapper.tsx  # Client Apollo provider
+├── next.config.js
+├── tsconfig.json
+└── package.json
+``` 
+
+- **Image Optimization**:
+  - Next.js `<Image>` with `priority` & `fetchPriority="high"` on cover and first 3 cards.
+
+- **Code Splitting** (`next/dynamic`):
+  Splits heavy UI into on-demand chunks.
+
+- **Tree Shaking**:
+  - Add `"sideEffects": false"` in `package.json`.
+  - Import only specific functions (e.g. `import debounce from 'lodash/debounce'`).
+
+- **Bundle Analysis**: run `ANALYZE=true npm run build` to inspect output.
