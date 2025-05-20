@@ -35,7 +35,6 @@ export default function MortyCard({ image, name, species, gender, idx }: MortyCa
         overflow="hidden"
         onClick={onOpen}
       >
-        {/* <ChakraImage src={image} alt={name} /> */}
         <Image
             src={image}
             width={300} height={300}

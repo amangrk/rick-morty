@@ -1,7 +1,13 @@
 'use client'
 
 import React from 'react'
-import { Grid, GridItem, HStack, Button, Text } from '@chakra-ui/react'
+import { 
+    Grid, 
+    GridItem, 
+    HStack, 
+    Button, 
+    Text 
+} from '@chakra-ui/react'
 import CharacterCard from './characterCard'
 import Link from 'next/link'
 import type { Character } from '@/app/types'
@@ -13,7 +19,7 @@ interface HomeContentProps {
 }
 
 export default function CharacterList({characters=[], totalPages=1, currentPage=1 }: HomeContentProps) {
-  // build pagination display: first, ..., surrounding, ..., last
+  //  pagination display: first, ..., surrounding, ..., last
   const delta = 2
   const pages: (number | string)[] = []
 

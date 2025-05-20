@@ -1,6 +1,10 @@
 'use client'
 
-import { ReactNode, useState, useEffect } from 'react'
+import { 
+    ReactNode, 
+    useState, 
+    useEffect 
+} from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
 import { ApolloWrapper } from '@/lib/apolloWrapper'
 
@@ -16,7 +20,7 @@ export default function ClientProviders({ children }: { children: ReactNode }) {
     return <>{children}</>
   }
 
-  // Once mounted, wrap in your client‐only providers
+  // Once mounted, wrap in client‐only providers
   return (
     <ChakraProvider>
       <ApolloWrapper>

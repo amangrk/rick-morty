@@ -8,7 +8,13 @@ export async function queryRSC(page: number = 1): Promise<CharactersConnection> 
       query GetCharacters($page: Int!) {
         characters(page: $page) {
           info { pages }
-          results { id name image species gender}
+          results { 
+            id 
+            name 
+            image 
+            species 
+            gender
+          }
         }
       }
     `,

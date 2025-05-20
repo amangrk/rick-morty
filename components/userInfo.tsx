@@ -17,6 +17,7 @@ interface UserInfoClientProps {
 export default function UserInfo({ username }: UserInfoClientProps) {
   const router = useRouter()
 
+  // clear user info from cookie and allow for edit
   const handleEdit = () => {
     document.cookie = 'userInfo=; path=/; max-age=0'
     router.refresh()
@@ -40,7 +41,6 @@ export default function UserInfo({ username }: UserInfoClientProps) {
           bottom={0}
           right={0}
           transform="translate(25%, 25%)"
-          // colorScheme="teal"
           variant="solid"
           borderRadius="full"
         />
