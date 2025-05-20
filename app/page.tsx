@@ -1,95 +1,54 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+export const revalidate = 60 
 
-export default function Home() {
+import React from 'react'
+import { Box, Flex, Heading } from '@chakra-ui/react'
+import { cookies } from 'next/headers'
+import { queryRSC } from '../lib/fetch'
+import SetupModal from '@/components/setupModal'
+import UserInfo from '@/components/userInfo'
+
+
+export default async function Page({ searchParams }: { searchParams?: Promise<{ page?: string }> }) {
+  const params = (await searchParams) ?? {}
+  const raw = params?.page ?? '1'
+  const pageNum = parseInt(raw, 10)
+  const currentPage = isNaN(pageNum) || pageNum < 1 ? 1 : pageNum
+
+  const cookieStore = await cookies()
+  const userCookie = cookieStore.get('userInfo')
+  if (!userCookie) return <SetupModal />
+
+  const user = JSON.parse(decodeURIComponent(userCookie.value))
+  const { results, info } = await queryRSC(currentPage)
+
+  //FIXME
+  console.log(results)
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Box px={{ base: 4, md: 8 }} py={{ base: 6, md: 10 }} minH="80vh" maxW="1200px" mx="auto">
+      <Box
+        as="header"
+        bgSize="cover"
+        bgPosition="center"
+        h={{ base: '100px', md: '150px' }}
+        mb={8}
+      >
+        <Flex
+          bgColor="rgba(0,0,0,0.4)"
+          align="center"
+          justify="space-between"
+          h="100%"
+          px={{ base: 4, md: 8 }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+          <Heading color="white" size="lg">Rick & Morty Gallery</Heading>
+          <Flex align="center">
+            <UserInfo username={user.username} />
+          </Flex>
+        </Flex>
+      </Box>
+      <Box as="footer" textAlign="center" mt={12} py={4} borderTop="1px" borderColor="gray.200">
+        Made by Aman Kawatra — v3.5
+      </Box>
+    </Box>
+  )
 }
