@@ -6,6 +6,7 @@ import { cookies } from 'next/headers'
 import { queryRSC } from '../lib/fetch'
 import SetupModal from '@/components/setupModal'
 import UserInfo from '@/components/userInfo'
+import CharacterList from '@/components/characterList'
 
 
 export default async function Page({ searchParams }: { searchParams?: Promise<{ page?: string }> }) {
@@ -46,6 +47,11 @@ export default async function Page({ searchParams }: { searchParams?: Promise<{ 
           </Flex>
         </Flex>
       </Box>
+      <CharacterList
+        characters={results}
+        totalPages={info.pages}
+        currentPage={currentPage}
+      />
       <Box as="footer" textAlign="center" mt={12} py={4} borderTop="1px" borderColor="gray.200">
         Made by Aman Kawatra — v3.5
       </Box>
