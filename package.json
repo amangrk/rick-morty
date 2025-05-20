@@ -13,9 +13,6 @@
     "@apollo/client-integration-nextjs": "^0.12.2",
     "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^2.10.8",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "framer-motion": "^12.12.1",
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
