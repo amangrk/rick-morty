@@ -99,7 +99,11 @@ A **Next.js 13+ App Router** project showcasing Rick & Morty characters with a p
 ├── next.config.js
 ├── tsconfig.json
 └── package.json
-``` 
+```
+
+---
+
+## Performance Tuning
 
 - **Image Optimization**:
   - Next.js `<Image>` with `priority` & `fetchPriority="high"` on cover and first 3 cards.
